@@ -1,56 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Support</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
-      background: linear-gradient(135deg, #ffe6f0, #e6f0ff, #e6ffe6);
-      background-size: 400% 400%;
-      animation: gradientShift 15s ease infinite;
-      overflow-x: hidden;
-      position: relative;
-    }
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    h3 { color: #333; }
-    .donate-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; position: relative; z-index: 2; }
-    .donate-option { width: 220px; height: 340px; background: #fff; border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1); padding: 15px; display: flex; flex-direction: column; justify-content: space-between; align-items: center;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .donate-option:hover { transform: translateY(-6px); box-shadow: 0 6px 12px rgba(0,0,0,0.15); }
-    .donate-option h4 { margin:5px 0; color:#444; font-size:18px; }
-    img { max-width: 160px; border:1px solid #ddd; border-radius:10px; transition: box-shadow 0.6s ease-in-out;}
-    img:hover { box-shadow: 0 0 15px rgba(0,118,255,0.6); }
-    a.button { display:inline-block; padding:8px 15px; color:white; border-radius:6px; text-decoration:none; font-weight:bold; margin:5px 0; transition: transform 0.2s ease, background 0.3s ease; }
-    a.button:hover { transform: scale(1.05);}
-    .paypal { background:#0070ba; } .paypal:hover{ background:#005c99; }
-    .coffee { background:#ffdd00;color:#333;} .coffee:hover{background:#e6c800;}
-    .venmo {background:#3d95ce;} .venmo:hover{background:#2d7bb0;}
-    .note { font-size:13px;color:#666; margin-top:5px; }
-    .thanks { margin-top:30px;font-size:16px;color:#555; z-index:2; position:relative; }
-
-    /* 爱心背景 */
-    .hearts { position:fixed; top:0; left:0; width:100%; height:100%; overflow:hidden; z-index:1; }
-    .heart { position:absolute; color:red; cursor:pointer; pointer-events:auto; transition: transform 0.2s ease, filter 0.2s ease; }
-    .heart.hovered { filter: drop-shadow(0 0 8px rgba(255,0,0,0.8)); z-index:10; }
-
-    .star {
-      position: absolute; font-size:12px; color:gold; opacity:1;
-      animation: explode 0.8s forwards;
-    }
-    @keyframes explode {
-      0% { transform: scale(1) translate(0,0); opacity:1;}
-      100% { transform: scale(0.5) translate(var(--x), var(--y)); opacity:0;}
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support the Developer</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/modals.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
 </head>
 <body>
   <div class="hearts"></div>
@@ -59,96 +17,69 @@
   <p>You can support me through the following options:</p>
 
   <div class="donate-container">
+    <!-- PayPal Option -->
     <div class="donate-option">
-      <h4>PayPal 💳</h4>
-      <a class="button paypal" href="https://www.paypal.com/donate/?hosted_button_id=XXXXXX" target="_blank">Donate via PayPal</a>
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://www.paypal.com/donate/?hosted_button_id=XXXXXX" alt="PayPal QR">
+      <h4><i class="fab fa-paypal"></i>PayPal</h4>
+      <a class="button paypal" href="#" data-payment="paypal">Donate via PayPal</a>
+      <img src="assets/images/paypal_qr.png" alt="PayPal QR" loading="lazy">
       <p class="note">Every little bit helps, thank you!</p>
     </div>
+
+    <!-- Buy Me a Coffee Option -->
     <div class="donate-option">
-      <h4>Buy Me a Coffee ☕</h4>
-      <a class="button coffee" href="https://buymeacoffee.com/chenming030" target="_blank">Buy Me a Coffee</a>
-      <img src="bmc_qr.png" alt="Buy Me a Coffee QR">
+      <h4><i class="fas fa-mug-hot"></i> Buy Me a Coffee</h4>
+      <a class="button coffee" href="#" data-payment="bmc">Buy Me a Coffee</a>
+      <img src="assets/images/bmc_qr.png" alt="Buy Me a Coffee QR" loading="lazy">
       <p class="note">Buy me a coffee and keep me coding!</p>
     </div>
+
+    <!-- Venmo Option -->
     <div class="donate-option">
-      <h4>Venmo 💙</h4>
-      <a class="button venmo" href="#" onclick="alert('Please scan the QR code with the Venmo app.')">Donate via Venmo</a>
-      <img src="venmo_qr.jpg" alt="Venmo QR">
+      <h4><i class="fab fa-venmo"></i> Venmo</h4>
+      <a class="button venmo" href="#" data-payment="venmo">Donate via Venmo</a>
+      <img src="assets/images/venmo_qr.jpg" alt="Venmo QR" loading="lazy">
       <p class="note">Fast & easy support with Venmo.</p>
+    </div>
+
+    <!-- Apple Pay Option -->
+    <div class="donate-option">
+      <h4><i class="fab fa-apple-pay"></i> Apple Pay </h4>
+      <a class="button applepay" href="#" data-payment="applepay">Pay with Apple Pay</a>
+      <img src="assets/images/applepay_qr.png" alt="Apple Pay QR" loading="lazy">
+      <p class="note">Quick and secure payment with Apple Pay.</p>
     </div>
   </div>
 
+  <!-- Universal Payment Modal -->
+  <div id="paymentModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="modalTitle">Select Amount</h4>
+        <span class="close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="preset-amounts">
+          <button class="preset-btn" data-amount="1">$1</button>
+          <button class="preset-btn" data-amount="3">$3</button>
+          <button class="preset-btn" data-amount="5">$5</button>
+          <button class="preset-btn" data-amount="10">$10</button>
+        </div>
+        <div class="custom-amount">
+          <input type="number" id="customAmount" placeholder="Enter custom amount" min="1" step="0.01">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="confirmPayment" class="btn-confirm">Pay Now</button>
+        <button id="cancelPayment" class="btn-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
   <div class="thanks">
     🙏 Thank you so much for your support! Your contribution helps me keep building simple, useful, and user-friendly tools.
   </div>
 
-  <script>
-    const heartsContainer = document.querySelector('.hearts');
-
-    function createHeart(){
-      const heart = document.createElement('div');
-      heart.classList.add('heart');
-      heart.innerHTML='❤️';
-
-      // 随机大小
-      const size = Math.random() * 15 + 15; // 15~30px
-      heart.style.fontSize = size + 'px';
-
-      let x = Math.random()*window.innerWidth;
-      let y = -size;
-      heart.style.left = x+'px';
-      heart.style.top = y+'px';
-
-      // 下落速度随机
-      const speed = Math.random()*0.7 + 0.3; // 0.3~1.0 px/帧
-      const vx = (Math.random()-0.5)*0.3; // 水平摆动
-
-      let paused = false;
-
-      heart.addEventListener('mouseenter', ()=> paused=true);
-      heart.addEventListener('mouseleave', ()=> paused=false);
-      heart.addEventListener('click', (e)=>{
-        explodeHeart(e.clientX, e.clientY);
-        heart.remove();
-      });
-
-      heartsContainer.appendChild(heart);
-
-      function animate(){
-        if(!paused){
-          y += speed;
-          x += vx;
-        }
-        heart.style.top = y+'px';
-        heart.style.left = x+'px';
-        if(y < window.innerHeight + 50){
-          requestAnimationFrame(animate);
-        } else {
-          heart.remove();
-        }
-      }
-
-      animate();
-    }
-
-    function explodeHeart(x,y){
-      for(let i=0;i<8;i++){
-        const star=document.createElement('div');
-        star.classList.add('star');
-        star.innerHTML='✨';
-        star.style.left = x+'px';
-        star.style.top = y+'px';
-        const angle = Math.random()*2*Math.PI;
-        const distance = Math.random()*80 + 30;
-        star.style.setProperty('--x', Math.cos(angle)*distance + 'px');
-        star.style.setProperty('--y', Math.sin(angle)*distance + 'px');
-        document.body.appendChild(star);
-        setTimeout(()=>star.remove(),800);
-      }
-    }
-
-    setInterval(createHeart, 400); // 每400ms生成一个爱心
-  </script>
+  <script src="js/animations.js"></script>
+  <script src="js/payments.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>

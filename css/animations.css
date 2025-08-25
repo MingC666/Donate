@@ -1,0 +1,294 @@
+/* Animation Styles for Donation Page */
+
+/* Background Gradient Animation */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Hearts Container */
+.hearts {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Individual Heart Styles */
+.heart {
+  position: absolute;
+  color: #ff6b6b;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.3s ease;
+  user-select: none;
+  font-size: 20px;
+  text-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+}
+
+.heart:hover {
+  filter: drop-shadow(0 0 12px rgba(255, 107, 107, 0.8));
+  transform: scale(1.2);
+  z-index: 10;
+}
+
+.heart.clicked {
+  animation: heartPulse 0.6s ease-out;
+}
+
+@keyframes heartPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Star Explosion Effect */
+.star {
+  position: absolute;
+  font-size: 12px;
+  color: gold;
+  opacity: 1;
+  animation: explode 0.8s forwards;
+  pointer-events: none;
+  text-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+}
+
+@keyframes explode {
+  0% {
+    transform: scale(1) translate(0, 0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.5) translate(var(--x), var(--y));
+    opacity: 0;
+  }
+}
+
+/* Card Hover Animations */
+.donate-option {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.donate-option:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.donate-option:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.donate-option:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.donate-option:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Button Press Animation */
+.button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Floating Animation for Images */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.donate-option img {
+  animation: float 3s ease-in-out infinite;
+}
+
+.donate-option:nth-child(1) img {
+  animation-delay: 0s;
+}
+
+.donate-option:nth-child(2) img {
+  animation-delay: 0.5s;
+}
+
+.donate-option:nth-child(3) img {
+  animation-delay: 1s;
+}
+
+.donate-option:nth-child(4) img {
+  animation-delay: 1.5s;
+}
+
+/* Shimmer Effect for Buttons */
+.button {
+  position: relative;
+  overflow: hidden;
+}
+
+.button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.button:hover::before {
+  left: 100%;
+}
+
+/* Pulse Animation for Thanks Section */
+.thanks {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+/* Sparkle Effect */
+.sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #ffd700;
+  border-radius: 50%;
+  animation: sparkle 1.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Loading Spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Bounce Animation for Success */
+.success-bounce {
+  animation: bounce 0.6s ease-out;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Shake Animation for Errors */
+.error-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+/* Fade Transitions */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+.fade-out {
+  animation: fadeOut 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .hearts {
+    display: none;
+  }
+}
