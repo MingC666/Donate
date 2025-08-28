@@ -391,6 +391,179 @@ class DonationApp {
 // Initialize the application
 window.donationApp = new DonationApp();
 
+// Dynamic GIF Detection and Switching
+let currentGifIndex = 0;
+let availableGifs = [];
+let isRandomMode = false; // Set to true for random switching
+
+// Auto-detect available GIF files
+async function detectAvailableGifs() {
+  const gifs = [];
+  let index = 0;
+
+  while (index < 20) { // Check up to 20 possible GIFs
+    try {
+      const response = await fetch(`assets/images/thank-you${index}.gif`, { method: 'HEAD' });
+      if (response.ok) {
+        gifs.push(index);
+      }
+    } catch (error) {
+      // File doesn't exist, continue checking
+    }
+    index++;
+  }
+
+  return gifs;
+}
+
+// Initialize GIF system
+async function initializeGifSystem() {
+  availableGifs = await detectAvailableGifs();
+
+  if (availableGifs.length === 0) {
+    console.log('No thank-you GIFs found');
+    return;
+  }
+
+  console.log(`Found ${availableGifs.length} thank-you GIFs:`, availableGifs);
+
+  // Set initial GIF
+  const gifElement = document.getElementById('thankYouGif');
+  if (gifElement && availableGifs.length > 0) {
+    const firstGifNumber = availableGifs[0];
+    gifElement.src = `assets/images/thank-you${firstGifNumber}.gif`;
+
+    // Make sure the image is visible
+    gifElement.style.display = 'block';
+    gifElement.style.opacity = '1';
+    gifElement.style.transform = 'scale(1)';
+
+    currentGifIndex = 0;
+  }
+}
+
+function switchThankYouGif() {
+  const gifElement = document.getElementById('thankYouGif');
+  if (!gifElement || availableGifs.length === 0) return;
+
+  // Choose next GIF (sequential or random)
+  if (isRandomMode) {
+    const randomIndex = Math.floor(Math.random() * availableGifs.length);
+    currentGifIndex = randomIndex;
+  } else {
+    currentGifIndex = (currentGifIndex + 1) % availableGifs.length;
+  }
+
+  // Make sure the GIF is visible
+  gifElement.style.display = 'block';
+
+  // Add transition effect
+  gifElement.style.opacity = '0';
+  gifElement.style.transform = 'scale(0.8)';
+
+  setTimeout(() => {
+    // Change GIF source
+    const gifNumber = availableGifs[currentGifIndex];
+    gifElement.src = `assets/images/thank-you${gifNumber}.gif`;
+
+    // Fade back in
+    gifElement.style.opacity = '1';
+    gifElement.style.transform = 'scale(1)';
+
+    // Optional celebration effect
+    if (window.animationController) {
+      const rect = gifElement.getBoundingClientRect();
+      window.animationController.explodeHeart(
+        rect.left + rect.width / 2,
+        rect.top + rect.height / 2
+      );
+    }
+  }, 150);
+}
+
+
+// Thank You Message Switching
+let currentMessageIndex = 0;
+let isMessageRandomMode = true; // Set to false for sequential switching
+
+const thankYouMessages = [
+  "Your support allows us to keep going—every contribution is truly appreciated.",
+  "Every donation brings us closer to our goal. Thank you for your generosity.",
+  "Your support means the world to us. Every bit counts.",
+  "Each contribution helps us achieve our dreams. Thank you for being part of it."
+];
+
+function switchThankYouMessage() {
+  const messageElement = document.querySelector('.thanks-message');
+
+  if (!messageElement || thankYouMessages.length === 0) return;
+
+  // Choose next message (sequential or random)
+  if (isMessageRandomMode) {
+    // Random selection (avoid repeating the same message)
+    let randomIndex;
+    do {
+      randomIndex = Math.floor(Math.random() * thankYouMessages.length);
+    } while (randomIndex === currentMessageIndex && thankYouMessages.length > 1);
+    currentMessageIndex = randomIndex;
+  } else {
+    // Sequential selection
+    currentMessageIndex = (currentMessageIndex + 1) % thankYouMessages.length;
+  }
+
+  // Add transition effect
+  messageElement.style.opacity = '0';
+  messageElement.style.transform = 'translateY(10px)';
+
+  setTimeout(() => {
+    // Change message content
+    messageElement.textContent = thankYouMessages[currentMessageIndex];
+
+    // Fade back in
+    messageElement.style.opacity = '1';
+    messageElement.style.transform = 'translateY(0)';
+
+    // Add subtle highlight effect
+    messageElement.style.background = 'linear-gradient(135deg, #f0fffe, #e6fffe)';
+    messageElement.style.borderRadius = '8px';
+    messageElement.style.padding = '8px 12px';
+
+    // Remove highlight after a moment
+    setTimeout(() => {
+      messageElement.style.background = '';
+      messageElement.style.borderRadius = '';
+      messageElement.style.padding = '';
+    }, 2000);
+  }, 200);
+}
+
+// Initialize message system
+function initializeMessageSystem() {
+  const messageElement = document.querySelector('.thanks-message');
+  if (messageElement) {
+    // Set initial message
+    messageElement.textContent = thankYouMessages[0];
+
+    // Make message clickable
+    messageElement.style.cursor = 'pointer';
+    messageElement.style.transition = 'all 0.3s ease';
+    messageElement.addEventListener('click', switchThankYouMessage);
+
+    // Add hover effect
+    messageElement.addEventListener('mouseenter', () => {
+      messageElement.style.background = 'rgba(78, 205, 196, 0.05)';
+      messageElement.style.borderRadius = '8px';
+      messageElement.style.padding = '8px 12px';
+    });
+
+    messageElement.addEventListener('mouseleave', () => {
+      messageElement.style.background = '';
+      messageElement.style.borderRadius = '';
+      messageElement.style.padding = '';
+    });
+  }
+}
+
 // Expose global utilities
 window.DonationUtils = {
   formatCurrency: (amount, currency = 'USD') => {
@@ -399,12 +572,12 @@ window.DonationUtils = {
       currency: currency
     }).format(amount);
   },
-  
+
   validateAmount: (amount) => {
     const num = parseFloat(amount);
     return !isNaN(num) && num > 0 && num <= 10000;
   },
-  
+
   debounce: (func, wait) => {
     let timeout;
     return function executedFunction(...args) {
@@ -415,5 +588,34 @@ window.DonationUtils = {
       clearTimeout(timeout);
       timeout = setTimeout(later, wait);
     };
+  },
+
+  switchGif: switchThankYouGif,
+  switchMessage: switchThankYouMessage,
+  setRandomMode: (gif = false, message = false) => {
+    isRandomMode = gif;
+    isMessageRandomMode = message;
   }
 };
+
+// Initialize everything when DOM is loaded
+document.addEventListener('DOMContentLoaded', async () => {
+  // Initialize animation controller
+  window.animationController = new AnimationController();
+
+  // Initialize payment controller
+  window.paymentController = new PaymentController();
+
+  // Initialize main app
+  window.donationApp = new DonationApp();
+
+  // Initialize GIF system
+  await initializeGifSystem();
+
+  // Initialize message system
+  initializeMessageSystem();
+
+  console.log('Donation page initialized successfully');
+  console.log(`Available GIFs: ${availableGifs.length}`);
+  console.log(`Available messages: ${thankYouMessages.length}`);
+});

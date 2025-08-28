@@ -36,9 +36,9 @@ p {
 /* Donation Container */
 .donate-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  max-width: 1200px;
+  max-width: 900px;
   margin: 0 auto;
   position: relative;
   z-index: 2;
@@ -89,19 +89,24 @@ p {
   font-weight: 600;
 }
 
-/* Images */
+.donate-option h4 i {
+  margin-right: 8px;
+}
+
+/* Images - Consistent and cute design */
 img {
-  max-width: 160px;
+  max-width: 140px;
   height: auto;
   border: 2px solid #f0f0f0;
-  border-radius: 12px;
+  border-radius: 16px;
   transition: all 0.3s ease;
   margin: 15px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 img:hover {
   border-color: #4ecdc4;
-  box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+  box-shadow: 0 4px 16px rgba(78, 205, 196, 0.2);
   transform: scale(1.02);
 }
 
@@ -153,13 +158,7 @@ img:hover {
   background: linear-gradient(135deg, #2d7bb0, #164a6b);
 }
 
-.applepay {
-  background: linear-gradient(135deg, #000000, #333333);
-}
 
-.applepay:hover {
-  background: linear-gradient(135deg, #1a1a1a, #4a4a4a);
-}
 
 /* Notes */
 .note {
@@ -170,50 +169,283 @@ img:hover {
   font-style: italic;
 }
 
-/* Thanks Section */
-.thanks {
-  margin-top: 40px;
-  font-size: 1.1rem;
-  color: #555;
-  z-index: 2;
+/* Enhanced Thanks Section */
+.thanks-section {
+  margin-top: 60px;
   position: relative;
-  max-width: 600px;
+  z-index: 2;
+  max-width: 900px;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.6;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.8);
+}
+
+.thanks-content {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 249, 250, 0.9));
+  border-radius: 24px;
+  padding: 40px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  animation: thanksSlideIn 1s ease-out;
+}
+
+@keyframes thanksSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.thanks-animation {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.floating-hearts {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+}
+
+.heart-float {
+  font-size: 20px;
+  animation: floatHeart 3s ease-in-out infinite;
+}
+
+.heart-float:nth-child(1) { animation-delay: 0s; }
+.heart-float:nth-child(2) { animation-delay: 1s; }
+.heart-float:nth-child(3) { animation-delay: 2s; }
+
+@keyframes floatHeart {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(10deg); }
+}
+
+/* Thanks GIF Container - Interactive and optimized */
+.thanks-gif-container {
+  width: 160px;
+  height: 160px;
+  border-radius: 20px;
+
+  /* Light minty green gradient */
+  background: linear-gradient(135deg, #E6F9E8, #CFF4D8); /* very soft, airy green */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+
+  /* Subtle green shadow */
+  box-shadow: 0 12px 30px rgba(207, 244, 216, 0.3);
+  cursor: pointer;
+
+  /* Smooth hover & scale effect */
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+/* Hover effect */
+.thanks-gif-container:hover {
+  transform: scale(1.05);
+  box-shadow: 0 16px 35px rgba(207, 244, 216, 0.4);
+  background: linear-gradient(135deg, #F0FCF2, #D8F8E0); /* brighter mint on hover */
+}
+
+/* GIF inside container */
+.thanks-gif-container img.thanks-gif {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+
+
+.thanks-gif {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 12px;
-  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+/* Thanks message interactive styling */
+.thanks-message {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.thanks-message:hover {
+  color: #4ecdc4;
+  transform: translateY(-1px);
+}
+
+.thanks-message::after {
+  content: '💬';
+  position: absolute;
+  right: -25px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-size: 0.8rem;
+}
+
+.thanks-message:hover::after {
+  opacity: 0.6;
+}
+
+.animated-emoji {
+  font-size: 48px;
+  animation: emojiPulse 2s ease-in-out infinite;
+}
+
+@keyframes emojiPulse {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(5deg);
+    filter: hue-rotate(30deg);
+  }
+}
+
+.thanks-text {
+  flex: 1;
+  text-align: left;
+}
+
+.thanks-title {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 16px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: nowrap;       /* keep in one line */
+  overflow: hidden;          /* hide overflow */
+  text-overflow: ellipsis;   /* show "..." if too long */
+
+}
+
+.thanks-message {
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 24px;
+  max-height: 60px;  /* fix the height */
+  min-height: 60px;  /* ensure box doesn’t shrink */
+  overflow: hidden;  /* hide extra content */
+
+}
+
+.highlight {
+  background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #2d3436;
+}
+
+.thanks-stats {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+  background: rgba(102, 126, 234, 0.2);
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  font-size: 18px;
+}
+
+.stat-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #667eea;
 }
 
 /* Responsive Design */
+@media (max-width: 900px) {
+  .donate-container {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 600px;
+  }
+}
+
 @media (max-width: 768px) {
   body {
     padding: 15px;
   }
-  
+
   .donate-container {
     grid-template-columns: 1fr;
     gap: 15px;
+    max-width: 400px;
   }
-  
+
   .donate-option {
     min-height: 320px;
     padding: 15px;
   }
-  
+
   h3 {
     font-size: 1.6rem;
   }
-  
+
   .button {
     min-width: 160px;
     padding: 10px 20px;
   }
-  
+
   img {
     max-width: 140px;
+  }
+
+  /* Thanks section mobile */
+  .thanks-content {
+    flex-direction: column;
+    text-align: center;
+    padding: 30px 20px;
+    gap: 20px;
+  }
+
+  .thanks-animation {
+    flex: none;
+  }
+
+  .thanks-stats {
+    justify-content: center;
   }
 }
 
@@ -234,6 +466,146 @@ img:hover {
   img {
     max-width: 120px;
   }
+}
+
+/* QR Code Container with Logo - Cute and friendly design */
+.qr-container {
+  position: relative;
+  display: inline-block;
+  margin: 15px 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.qr-container:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(0, 112, 186, 0.15);
+}
+
+.qr-container img {
+  display: block;
+  border-radius: 16px;
+  max-width: 140px !important;
+  height: auto;
+}
+
+.qr-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, #fff, #f8f9fa);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 12px rgba(0, 112, 186, 0.3), 0 1px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid #fff;
+  transition: all 0.3s ease;
+}
+
+.qr-container:hover .qr-logo {
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 4px 16px rgba(0, 112, 186, 0.4), 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.qr-logo i {
+  font-size: 18px;
+  color: #0070ba;
+  transition: all 0.3s ease;
+}
+
+.qr-container:hover .qr-logo i {
+  color: #005c99;
+}
+
+/* Direct Link Styles */
+.direct-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  margin: 8px 0;
+  font-size: 0.85rem;
+  color: #666;
+  text-decoration: none;
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.direct-link:hover {
+  color: #4ecdc4;
+  border-color: #4ecdc4;
+  background: rgba(78, 205, 196, 0.05);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(78, 205, 196, 0.2);
+}
+
+.direct-link i {
+  font-size: 0.75rem;
+  transition: transform 0.3s ease;
+}
+
+.direct-link:hover i {
+  transform: translateX(2px);
+}
+
+/* Add cute decorative elements */
+.donate-option::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+  background-size: 300% 300%;
+  border-radius: 18px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: gradientShift 3s ease infinite;
+}
+
+.donate-option:hover::before {
+  opacity: 0.1;
+}
+
+/* Cute corner decorations */
+.donate-option::after {
+  content: '✨';
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 16px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  transform: rotate(-15deg);
+}
+
+.donate-option:hover::after {
+  opacity: 0.6;
+  transform: rotate(0deg) scale(1.2);
+}
+
+/* Apple Pay Placeholder */
+.apple-pay-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 12px;
+  margin: 15px 0;
+  border: 2px dashed #dee2e6;
 }
 
 /* Accessibility */

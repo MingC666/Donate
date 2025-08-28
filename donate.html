@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="css/modals.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-</head>
 <body>
   <div class="hearts"></div>
 
@@ -19,17 +18,28 @@
   <div class="donate-container">
     <!-- PayPal Option -->
     <div class="donate-option">
-      <h4><i class="fab fa-paypal"></i>PayPal</h4>
+      <h4><i class="fab fa-paypal"></i> PayPal</h4>
       <a class="button paypal" href="#" data-payment="paypal">Donate via PayPal</a>
-      <img src="assets/images/paypal_qr.png" alt="PayPal QR" loading="lazy">
+      <div class="qr-container">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://paypal.me/mingc2333" alt="PayPal QR" loading="lazy">
+        <div class="qr-logo">
+          <i class="fab fa-paypal"></i>
+        </div>
+      </div>
+      <a href="https://paypal.me/mingc2333" target="_blank" class="direct-link">
+        <i class="fas fa-external-link-alt"></i> Direct Link
+      </a>
       <p class="note">Every little bit helps, thank you!</p>
     </div>
 
     <!-- Buy Me a Coffee Option -->
     <div class="donate-option">
       <h4><i class="fas fa-mug-hot"></i> Buy Me a Coffee</h4>
-      <a class="button coffee" href="#" data-payment="bmc">Buy Me a Coffee</a>
+      <a class="button coffee" href="https://buymeacoffee.com/chenming030" target="_blank">Buy Me a Coffee</a>
       <img src="assets/images/bmc_qr.png" alt="Buy Me a Coffee QR" loading="lazy">
+      <a href="https://buymeacoffee.com/chenming030" target="_blank" class="direct-link">
+        <i class="fas fa-external-link-alt"></i> Direct Link
+      </a>
       <p class="note">Buy me a coffee and keep me coding!</p>
     </div>
 
@@ -38,15 +48,10 @@
       <h4><i class="fab fa-venmo"></i> Venmo</h4>
       <a class="button venmo" href="#" data-payment="venmo">Donate via Venmo</a>
       <img src="assets/images/venmo_qr.jpg" alt="Venmo QR" loading="lazy">
+      <a href="https://venmo.com/Ming-C_23333" target="_blank" class="direct-link">
+        <i class="fas fa-external-link-alt"></i> Direct Link
+      </a>
       <p class="note">Fast & easy support with Venmo.</p>
-    </div>
-
-    <!-- Apple Pay Option -->
-    <div class="donate-option">
-      <h4><i class="fab fa-apple-pay"></i> Apple Pay </h4>
-      <a class="button applepay" href="#" data-payment="applepay">Pay with Apple Pay</a>
-      <img src="assets/images/applepay_qr.png" alt="Apple Pay QR" loading="lazy">
-      <p class="note">Quick and secure payment with Apple Pay.</p>
     </div>
   </div>
 
@@ -58,14 +63,18 @@
         <span class="close">&times;</span>
       </div>
       <div class="modal-body">
+        <div class="amount-display">
+          <span class="amount-label">Selected Amount:</span>
+          <span class="amount-value" id="selectedAmountDisplay">$0</span>
+        </div>
         <div class="preset-amounts">
-          <button class="preset-btn" data-amount="1">$1</button>
-          <button class="preset-btn" data-amount="3">$3</button>
-          <button class="preset-btn" data-amount="5">$5</button>
-          <button class="preset-btn" data-amount="10">$10</button>
+          <button class="preset-btn warm-level-1" data-amount="2">$2</button>
+          <button class="preset-btn warm-level-2" data-amount="5">$5</button>
+          <button class="preset-btn warm-level-3" data-amount="10">$10</button>
+          <button class="preset-btn warm-level-4" data-amount="20">$20</button>
         </div>
         <div class="custom-amount">
-          <input type="number" id="customAmount" placeholder="Enter custom amount" min="1" step="0.01">
+          <input type="number" id="customAmount" placeholder="Enter custom amount or modify above" min="1" step="0.01">
         </div>
       </div>
       <div class="modal-footer">
@@ -74,8 +83,31 @@
       </div>
     </div>
   </div>
-  <div class="thanks">
-    🙏 Thank you so much for your support! Your contribution helps me keep building simple, useful, and user-friendly tools.
+  
+  <div class="thanks-section">
+    <div class="thanks-content">
+      <div class="thanks-animation">
+        <div class="floating-hearts">
+          <span class="heart-float">✨</span>
+          <span class="heart-float">🌟</span>
+        </div>
+        <div class="thanks-gif-container" onclick="switchThankYouGif()">
+          <img src="assets/images/thank-you0.gif" 
+            alt="Thank You Animation" 
+            class="thanks-gif" 
+            id="thankYouGif" 
+            style="display:block; width:200px; height:auto;"
+            onerror="this.style.display='none'">
+
+        </div>
+      </div>
+      <div class="thanks-text">
+        <h3 class="thanks-title">Your support brings warmth and hope</h3>
+        <p class="thanks-message" onclick="switchThankYouMessage()">
+          Your support allows us to keep going—every contribution is truly appreciated.
+        </p>
+      </div>
+    </div>
   </div>
 
   <script src="js/animations.js"></script>

@@ -78,22 +78,24 @@ analytics: {
 ## Payment Method Integration
 
 ### PayPal
-1. Create a PayPal donation button at https://www.paypal.com/donate/buttons
-2. Replace `XXXXXX` in the PayPal URL with your actual button ID
-3. Generate and replace the PayPal QR code image
+- **Direct Link**: Uses paypal.me/mingc2333 for instant redirection
+- **QR Code**: Auto-generated with PayPal logo overlay
+- **No Modal**: Direct navigation to PayPal payment page
 
 ### Buy Me a Coffee
-1. Update the username in the BMC URL
-2. The existing QR code should work if it points to the correct profile
+- **Direct Link**: Direct redirection to BMC profile
+- **QR Code**: Static QR code pointing to BMC profile
+- **No Modal**: Instant navigation to BMC payment page
 
 ### Venmo
-1. Update the username in the Venmo URL
-2. The existing QR code should work if it points to the correct profile
+- **Modal Interface**: Custom amount selection with preset buttons
+- **QR Code**: Static QR code for mobile app scanning
+- **Amount Selection**: $1, $3, $5, $10 presets + custom input
 
 ### Apple Pay
-1. Set up Apple Pay merchant account
-2. Configure Apple Pay JS integration
-3. Update the merchant ID in the configuration
+- **Coming Soon**: Placeholder interface for future integration
+- **No QR Code**: Uses Apple Pay icon placeholder
+- **Modal Ready**: Infrastructure prepared for Apple Pay JS integration
 
 ## Customization
 

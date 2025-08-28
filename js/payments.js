@@ -20,27 +20,21 @@ class PaymentController {
     this.paymentMethods = {
       paypal: {
         name: 'PayPal',
-        icon: '💳',
-        baseUrl: 'https://www.paypal.com/donate/?hosted_button_id=XXXXXX',
+        icon: '<i class="fab fa-paypal"></i>',
+        baseUrl: 'https://paypal.me/mingc2333',
         color: '#0070ba'
       },
       bmc: {
         name: 'Buy Me a Coffee',
-        icon: '☕',
+        icon: '<i class="fas fa-mug-hot"></i>',
         baseUrl: 'https://buymeacoffee.com/chenming030',
         color: '#ffdd00'
       },
       venmo: {
         name: 'Venmo',
-        icon: '💙',
+        icon: '<i class="fab fa-venmo"></i>',
         baseUrl: 'https://venmo.com/Ming-C_23333',
         color: '#3d95ce'
-      },
-      applepay: {
-        name: 'Apple Pay',
-        icon: '🍎',
-        baseUrl: 'https://pay.apple.com',
-        color: '#000000'
       }
     };
 
@@ -76,6 +70,8 @@ class PaymentController {
     this.cancelButton = this.modal.querySelector('#cancelPayment');
     this.closeButton = this.modal.querySelector('.close');
     this.presetButtons = Array.from(this.modal.querySelectorAll('.preset-btn'));
+    this.amountDisplay = this.modal.querySelector('#selectedAmountDisplay');
+    this.amountDisplayContainer = this.modal.querySelector('.amount-display');
   }
 
   bindEvents() {
@@ -127,11 +123,18 @@ class PaymentController {
 
   setupPaymentButtons() {
     const paymentButtons = document.querySelectorAll('[data-payment]');
-    
+
     paymentButtons.forEach(button => {
       button.addEventListener('click', (e) => {
         e.preventDefault();
         const paymentMethod = button.getAttribute('data-payment');
+
+        // Only BMC redirects directly, PayPal and Venmo use modal
+        if (paymentMethod === 'bmc') {
+          // BMC is handled by its direct href link
+          return;
+        }
+
         this.openModal(paymentMethod);
       });
     });
@@ -147,23 +150,20 @@ class PaymentController {
     const method = this.paymentMethods[paymentMethod];
 
     // Update modal content
-    this.modalTitle.textContent = `${method.name} ${method.icon}`;
-    
+    this.modalTitle.innerHTML = `${method.icon} ${method.name}`;
+
     // Apply payment method specific styling
-    this.modal.className = `modal ${paymentMethod}`;
-    
+    this.modal.className = `modal ${paymentMethod} show`;
+
     // Reset form
     this.resetForm();
-    
-    // Show modal
-    this.modal.classList.add('show');
+
+    // Show modal with proper display
+    this.modal.style.display = 'block';
     this.modal.setAttribute('aria-hidden', 'false');
-    
+
     // Focus management
     this.trapFocus();
-    
-    // Add to body class for potential styling
-    document.body.classList.add('modal-open');
 
     // Analytics (if needed)
     this.trackEvent('modal_opened', paymentMethod);
@@ -173,14 +173,14 @@ class PaymentController {
     if (!this.modal) return;
 
     this.modal.classList.remove('show');
+    this.modal.style.display = 'none';
     this.modal.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('modal-open');
-    
+
     // Reset state
     this.currentPaymentMethod = null;
     this.selectedAmount = null;
     this.isProcessing = false;
-    
+
     // Remove loading state
     if (window.animationController) {
       window.animationController.removeLoadingAnimation(this.confirmButton);
@@ -189,24 +189,60 @@ class PaymentController {
 
   selectAmount(amount, buttonElement) {
     this.selectedAmount = parseFloat(amount);
-    this.customAmountInput.value = '';
-    
+
+    // Show selected amount in input field for user to see/modify
+    this.customAmountInput.value = amount;
+
+    // Update amount display
+    this.updateAmountDisplay(amount);
+
     // Update button states
     this.presetButtons.forEach(btn => btn.classList.remove('selected'));
     buttonElement.classList.add('selected');
-    
+
+    // Add visual feedback to input
+    this.customAmountInput.style.background = 'linear-gradient(135deg, #f0fffe, #e6fffe)';
+    this.customAmountInput.style.borderColor = '#4ecdc4';
+
+    // Reset input styling after a moment
+    setTimeout(() => {
+      this.customAmountInput.style.background = '';
+      this.customAmountInput.style.borderColor = '';
+    }, 1500);
+
     this.validateAmount();
+  }
+
+  updateAmountDisplay(amount) {
+    if (this.amountDisplay) {
+      this.amountDisplay.textContent = `$${amount}`;
+      this.amountDisplayContainer.classList.add('active');
+
+      // Remove active class after animation
+      setTimeout(() => {
+        this.amountDisplayContainer.classList.remove('active');
+      }, 1000);
+    }
   }
 
   clearPresetSelection() {
     this.presetButtons.forEach(btn => btn.classList.remove('selected'));
-    
+
     const customValue = parseFloat(this.customAmountInput.value);
     if (customValue > 0) {
       this.selectedAmount = customValue;
+      // Update display when user types custom amount
+      this.updateAmountDisplay(customValue);
     } else {
       this.selectedAmount = null;
+      if (this.amountDisplay) {
+        this.amountDisplay.textContent = '$0';
+      }
     }
+
+    // Reset input styling when user types
+    this.customAmountInput.style.background = '';
+    this.customAmountInput.style.borderColor = '';
   }
 
   validateAmount() {
@@ -281,23 +317,13 @@ class PaymentController {
 
     switch (this.currentPaymentMethod) {
       case 'paypal':
-        // PayPal donation URL with amount
-        url = `https://www.paypal.com/donate/?hosted_button_id=XXXXXX&amount=${this.selectedAmount}`;
+        // PayPal.me URL with amount
+        url = `https://paypal.me/mingc2333/${this.selectedAmount}`;
         break;
-        
-      case 'bmc':
-        // Buy Me a Coffee URL
-        url = `https://buymeacoffee.com/chenming030?amount=${this.selectedAmount}`;
-        break;
-        
+
       case 'venmo':
         // Venmo URL with amount and note
         url = `https://venmo.com/Ming-C_23333?txn=pay&amount=${encodeURIComponent(this.selectedAmount)}&note=${encodeURIComponent('Thanks for your support!')}`;
-        break;
-        
-      case 'applepay':
-        // Apple Pay URL (this would typically integrate with Apple Pay JS API)
-        url = `https://pay.apple.com?amount=${this.selectedAmount}&currency=USD`;
         break;
     }
 

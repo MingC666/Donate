@@ -8,6 +8,10 @@ class AnimationController {
     this.heartsContainer = null;
     this.heartInterval = null;
     this.isAnimationEnabled = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.activeHearts = new Set(); // 追踪活跃的爱心
+    this.maxHearts = 35; // 最大爱心数量
+    this.heartCreationRate = 800; // 爱心生成间隔（毫秒）
+    this.isPaused = false; // 页面是否暂停
     this.init();
   }
 
@@ -41,11 +45,13 @@ class AnimationController {
     if (this.heartInterval) {
       clearInterval(this.heartInterval);
     }
-    
-    // Create hearts at intervals
+
+    // Create hearts at intervals, but only if not paused and under limit
     this.heartInterval = setInterval(() => {
-      this.createHeart();
-    }, 600); // Every 600ms for better performance
+      if (!this.isPaused && this.activeHearts.size < this.maxHearts) {
+        this.createHeart();
+      }
+    }, this.heartCreationRate);
   }
 
   stopHeartAnimation() {
@@ -56,13 +62,19 @@ class AnimationController {
   }
 
   createHeart() {
-    if (!this.heartsContainer || !this.isAnimationEnabled) return;
+    if (!this.heartsContainer || !this.isAnimationEnabled || this.isPaused) return;
+
+    // Check if we've reached the maximum number of hearts
+    if (this.activeHearts.size >= this.maxHearts) return;
 
     const heart = document.createElement('div');
     heart.classList.add('heart');
     heart.innerHTML = '❤️';
     heart.setAttribute('role', 'presentation');
     heart.setAttribute('aria-hidden', 'true');
+
+    // Add to active hearts set
+    this.activeHearts.add(heart);
 
     // Random size between 15-30px
     const size = Math.random() * 15 + 15;
@@ -71,7 +83,7 @@ class AnimationController {
     // Random horizontal position
     let x = Math.random() * (window.innerWidth - size);
     let y = -size;
-    
+
     heart.style.left = `${x}px`;
     heart.style.top = `${y}px`;
 
@@ -81,6 +93,7 @@ class AnimationController {
 
     let paused = false;
     let animationFrame = null;
+    let lastTime = performance.now();
 
     // Event listeners
     const handleMouseEnter = () => {
@@ -105,17 +118,22 @@ class AnimationController {
 
     this.heartsContainer.appendChild(heart);
 
-    // Animation loop
-    const animate = () => {
-      if (!paused) {
-        y += speed;
-        x += vx;
-      }
-      
-      heart.style.top = `${y}px`;
-      heart.style.left = `${x}px`;
+    // Optimized animation loop with frame rate control
+    const animate = (currentTime) => {
+      const deltaTime = currentTime - lastTime;
 
-      if (y < window.innerHeight + 50 && heart.parentNode) {
+      // Only update if enough time has passed (60fps limit)
+      if (deltaTime >= 16.67) {
+        if (!paused && !this.isPaused) {
+          y += speed;
+          x += vx;
+
+          heart.style.transform = `translate(${x}px, ${y}px)`;
+        }
+        lastTime = currentTime;
+      }
+
+      if (y < window.innerHeight + 50 && heart.parentNode && this.activeHearts.has(heart)) {
         animationFrame = requestAnimationFrame(animate);
       } else {
         this.removeHeart(heart);
@@ -136,11 +154,17 @@ class AnimationController {
   }
 
   removeHeart(heart) {
-    if (heart && heart.parentNode) {
+    if (heart && this.activeHearts.has(heart)) {
+      // Remove from active hearts set
+      this.activeHearts.delete(heart);
+
       if (heart._cleanup) {
         heart._cleanup();
       }
-      heart.parentNode.removeChild(heart);
+
+      if (heart.parentNode) {
+        heart.parentNode.removeChild(heart);
+      }
     }
   }
 
@@ -253,15 +277,36 @@ class AnimationController {
     element.classList.remove('loading');
   }
 
+  // Clean up stuck hearts (hearts that are stuck at the top)
+  cleanupStuckHearts() {
+    if (!this.heartsContainer) return;
+
+    const hearts = Array.from(this.activeHearts);
+    hearts.forEach(heart => {
+      if (heart.parentNode) {
+        const rect = heart.getBoundingClientRect();
+        // Remove hearts that are stuck at the top or outside viewport
+        if (rect.top < -100 || rect.top > window.innerHeight + 100) {
+          this.removeHeart(heart);
+        }
+      } else {
+        // Remove hearts that are no longer in DOM
+        this.activeHearts.delete(heart);
+      }
+    });
+  }
+
   // Cleanup method
   destroy() {
     this.stopHeartAnimation();
-    
+
     // Remove all hearts
     if (this.heartsContainer) {
-      const hearts = this.heartsContainer.querySelectorAll('.heart');
+      const hearts = Array.from(this.activeHearts);
       hearts.forEach(heart => this.removeHeart(heart));
     }
+
+    this.activeHearts.clear();
   }
 }
 
@@ -272,10 +317,28 @@ window.animationController = new AnimationController();
 document.addEventListener('visibilitychange', () => {
   if (window.animationController) {
     if (document.hidden) {
+      window.animationController.isPaused = true;
       window.animationController.stopHeartAnimation();
     } else {
+      window.animationController.isPaused = false;
+      // Clean up any stuck hearts when returning to page
+      window.animationController.cleanupStuckHearts();
       window.animationController.startHeartAnimation();
     }
+  }
+});
+
+// Handle window focus/blur for additional performance
+window.addEventListener('blur', () => {
+  if (window.animationController) {
+    window.animationController.isPaused = true;
+  }
+});
+
+window.addEventListener('focus', () => {
+  if (window.animationController) {
+    window.animationController.isPaused = false;
+    window.animationController.cleanupStuckHearts();
   }
 });
 
